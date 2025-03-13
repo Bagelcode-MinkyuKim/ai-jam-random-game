@@ -32,9 +32,9 @@ public class CharacterDataWindow : EditorWindow
         GUILayout.Space(10);
 
         // 복사 버튼
-        if (GUILayout.Button("Clone With New Data"))
+        if (GUILayout.Button("Clone With New Prompts And Basic Info"))
         {
-            CloneWithNewData();
+            CloneWithNewPromptsAndBasicInfo(promptText, basicInfo);
         }
 
         GUILayout.Space(20);
@@ -44,18 +44,40 @@ public class CharacterDataWindow : EditorWindow
         EditorGUILayout.TextArea(result, GUILayout.Height(100));
     }
 
-    private void CloneWithNewData()
+    // 사용자가 원하는 형식의 메서드
+    private void CloneWithNewPromptsAndBasicInfo(string prompt, string basic)
     {
-        if (string.IsNullOrEmpty(promptText) || string.IsNullOrEmpty(basicInfo))
+        if (string.IsNullOrEmpty(prompt) || string.IsNullOrEmpty(basic))
         {
             result = "⚠️ Prompt와 Basic Info를 모두 입력하세요.";
             return;
         }
 
-        // 예제: 단순 문자열 합치기 (여기서 필요한 실제 클론 로직으로 교체 가능)
-        result = $"✅ 복제 완료!\n\n[Prompt]: {promptText}\n[Basic Info]: {basicInfo}";
+        // 원하는 클론 작업 처리 (예제: 단순 문자열 결합)
+        result = $"✅ 복제 완료!\n\n[Prompt]: {prompt}\n[Basic Info]: {basic}";
 
-        // 실제 데이터 생성 또는 복사 로직을 여기에 추가 가능
-        // 예: ScriptableObject 클론, JSON 생성, 에셋 복사 등
+        // 이후 확장 예시 (비활성화 상태)
+        // SaveToFile(prompt, basic);
+        // CreateScriptableObject(prompt, basic);
     }
+
+    // 예제 확장 (파일 저장, 필요 시 사용)
+    private void SaveToFile(string prompt, string basic)
+    {
+        string path = "Assets/ClonedData.txt";
+        string content = $"Prompt: {prompt}\nBasic Info: {basic}";
+        System.IO.File.WriteAllText(path, content);
+        AssetDatabase.Refresh();
+    }
+
+    // 예제 확장 (ScriptableObject 생성, 필요 시 사용)
+    // private void CreateScriptableObject(string prompt, string basic)
+    // {
+    //     var data = ScriptableObject.CreateInstance<MyDataObject>();
+    //     data.prompt = prompt;
+    //     data.basicInfo = basic;
+    //     AssetDatabase.CreateAsset(data, "Assets/NewDataObject.asset");
+    //     AssetDatabase.SaveAssets();
+    //     AssetDatabase.Refresh();
+    // }
 }
