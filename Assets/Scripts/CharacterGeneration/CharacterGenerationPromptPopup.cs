@@ -17,6 +17,7 @@ public class CharacterGenerationPromptPopup : MonoBehaviour
     {
         inputField.onSubmit.RemoveAllListeners();
         submitButton.onClick.RemoveAllListeners();
+        inputField.onValueChanged.RemoveAllListeners();
     }
 
     private void OnSubmitButtonDown()
@@ -44,6 +45,7 @@ public class CharacterGenerationPromptPopup : MonoBehaviour
         finishInput = false;
         inputField.onSubmit.AddListener(OnSubmit);
         submitButton.onClick.AddListener(OnSubmitButtonDown);
+        inputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { SoundManager.Instance.PlayType(); return addedChar; };
 
         await UniTask.WaitUntil(() => finishInput);
 
