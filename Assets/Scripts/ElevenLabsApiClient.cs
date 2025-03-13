@@ -98,6 +98,7 @@ public partial class ElevenLabsApiClient : MonoBehaviour
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
+            Debug.Log("Voice Design Request: " + jsonData);
             await request.SendWebRequest().ToUniTask();
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -159,47 +160,49 @@ public partial class ElevenLabsApiClient : MonoBehaviour
         }
     }
 
-    [Serializable]
-    private class TTSRequest
-    {
-        public string text;
-        public string model_id;
-    }
 
-    [Serializable]
-    private class VoiceDesignRequest
-    {
-        public string voice_description;
-        public string text;
-    }
+}
 
-    [Serializable]
-    private class SaveVoiceDesignRequest
-    {
-        public string voice_description;
-        public string voice_name;
-        public string generated_voice_id;
-    }
+[Serializable]
+public class TTSRequest
+{
+    public string text;
+    public string model_id;
+}
 
-    [Serializable]
-    public class VoiceDesignResponse
-    {
-        [JsonProperty("previews")]
-        public List<VoiceDesignPreviews> previews;
-    }
+[Serializable]
+public class VoiceDesignRequest
+{
+    public string voice_description;
+    public string text;
+}
 
-    [Serializable]
-    public class SaveVoiceDesignResponse
-    {
-        public string voice_id;
-    }
+[Serializable]
+public class SaveVoiceDesignRequest
+{
+    public string voice_description;
+    public string voice_name;
+    public string generated_voice_id;
+}
 
-    [Serializable]
-    public class VoiceDesignPreviews
-    {
-        public string audio_base_64;
-        public string generated_voice_id;
-        public string media_type;
-        public string duration_secs;
-    }
+[Serializable]
+public class VoiceDesignResponse
+{
+    [JsonProperty("previews")]
+    public List<VoiceDesignPreviews> previews;
+}
+
+[Serializable]
+public class SaveVoiceDesignResponse
+{
+    public string voice_id;
+}
+
+[Serializable]
+public class VoiceDesignPreviews
+{
+    public string audio_base_64;
+    public string generated_voice_id;
+    public string media_type;
+    public string duration_secs;
 }

@@ -3,81 +3,91 @@ using UnityEngine;
 
 public class CharacterDataWindow : EditorWindow
 {
-    private string promptText = "Enter your prompt here...";
-    private string basicInfo = "Enter basic info here...";
-    private string result = "";
+    private Sprite newSprite;
+    private string newVoiceId = "New Voice ID";
+    private string newCharacterPrompt = "New Character Prompt";
+    private string newOutfitPrompt = "New Outfit Prompt";
+    private string newPersonalityPrompt = "New Personality Prompt";
+    private string newVoicePrompt = "New Voice Prompt";
 
-    [MenuItem("Tools/Clone With New Prompts")]
+    [MenuItem("Tools/Character Data/Clone With New Prompts And Basic Info")]
     public static void ShowWindow()
     {
-        GetWindow<CharacterDataWindow>("Clone With New Prompts");
+        GetWindow<CharacterDataWindow>("Clone Character Data");
     }
 
     private void OnGUI()
     {
-        GUILayout.Label("Clone With New Prompts & Basic Info", EditorStyles.boldLabel);
-
+        GUILayout.Label("🧬 CharacterData 복제 툴", EditorStyles.boldLabel);
         GUILayout.Space(10);
 
-        // 프롬프트 입력
-        GUILayout.Label("Prompt", EditorStyles.label);
-        promptText = EditorGUILayout.TextField(promptText);
+        // Sprite 입력
+        GUILayout.Label("Character Sprite", EditorStyles.label);
+        newSprite = (Sprite)EditorGUILayout.ObjectField(newSprite, typeof(Sprite), false);
 
         GUILayout.Space(5);
 
-        // 기본 정보 입력
-        GUILayout.Label("Basic Info", EditorStyles.label);
-        basicInfo = EditorGUILayout.TextField(basicInfo);
+        // Voice ID
+        GUILayout.Label("Voice ID", EditorStyles.label);
+        newVoiceId = EditorGUILayout.TextField(newVoiceId);
 
-        GUILayout.Space(10);
+        GUILayout.Space(5);
 
-        // 복사 버튼
-        if (GUILayout.Button("Clone With New Prompts And Basic Info"))
-        {
-            CloneWithNewPromptsAndBasicInfo(promptText, basicInfo);
-        }
+        // Character Prompt
+        GUILayout.Label("Character Prompt", EditorStyles.label);
+        newCharacterPrompt = EditorGUILayout.TextArea(newCharacterPrompt, GUILayout.Height(50));
+
+        GUILayout.Space(5);
+
+        // Outfit Prompt
+        GUILayout.Label("Outfit Prompt", EditorStyles.label);
+        newOutfitPrompt = EditorGUILayout.TextArea(newOutfitPrompt, GUILayout.Height(50));
+
+        GUILayout.Space(5);
+
+        // Personality Prompt
+        GUILayout.Label("Personality Prompt", EditorStyles.label);
+        newPersonalityPrompt = EditorGUILayout.TextArea(newPersonalityPrompt, GUILayout.Height(50));
+
+        GUILayout.Space(5);
+
+        // Voice Prompt
+        GUILayout.Label("Voice Prompt", EditorStyles.label);
+        newVoicePrompt = EditorGUILayout.TextArea(newVoicePrompt, GUILayout.Height(50));
 
         GUILayout.Space(20);
 
-        // 결과 출력
-        GUILayout.Label("Result", EditorStyles.boldLabel);
-        EditorGUILayout.TextArea(result, GUILayout.Height(100));
+        // 복제 버튼
+        if (GUILayout.Button("🚀 Clone With New Prompts And Basic Info"))
+        {
+            CloneWithNewPromptsAndBasicInfo();
+        }
     }
 
-    // 사용자가 원하는 형식의 메서드
-    private void CloneWithNewPromptsAndBasicInfo(string prompt, string basic)
+    private void CloneWithNewPromptsAndBasicInfo()
     {
-        if (string.IsNullOrEmpty(prompt) || string.IsNullOrEmpty(basic))
+        // 필수 값 체크
+        if (newSprite == null)
         {
-            result = "⚠️ Prompt와 Basic Info를 모두 입력하세요.";
+            EditorUtility.DisplayDialog("에러", "⚠️ Sprite를 설정하세요.", "확인");
             return;
         }
 
-        // 원하는 클론 작업 처리 (예제: 단순 문자열 결합)
-        result = $"✅ 복제 완료!\n\n[Prompt]: {prompt}\n[Basic Info]: {basic}";
+        // 복제 실행
+        CharacterData clonedData = CharacterData.CloneWithNewPromptsAndBasicInfo(
+            newSprite,
+            "Test",
+            newVoiceId,
+            newCharacterPrompt,
+            newOutfitPrompt,
+            newPersonalityPrompt,
+            newVoicePrompt
+        );
 
-        // 이후 확장 예시 (비활성화 상태)
-        // SaveToFile(prompt, basic);
-        // CreateScriptableObject(prompt, basic);
+        // 완료 안내
+        EditorUtility.DisplayDialog("성공", $"✅ 복제가 완료되었습니다!\n\n경로: Assets/Resources/CharacterData/{newSprite.name}.asset", "확인");
+
+        // 생성된 에셋 하이라키 선택
+        Selection.activeObject = clonedData;
     }
-
-    // 예제 확장 (파일 저장, 필요 시 사용)
-    private void SaveToFile(string prompt, string basic)
-    {
-        string path = "Assets/ClonedData.txt";
-        string content = $"Prompt: {prompt}\nBasic Info: {basic}";
-        System.IO.File.WriteAllText(path, content);
-        AssetDatabase.Refresh();
-    }
-
-    // 예제 확장 (ScriptableObject 생성, 필요 시 사용)
-    // private void CreateScriptableObject(string prompt, string basic)
-    // {
-    //     var data = ScriptableObject.CreateInstance<MyDataObject>();
-    //     data.prompt = prompt;
-    //     data.basicInfo = basic;
-    //     AssetDatabase.CreateAsset(data, "Assets/NewDataObject.asset");
-    //     AssetDatabase.SaveAssets();
-    //     AssetDatabase.Refresh();
-    // }
 }

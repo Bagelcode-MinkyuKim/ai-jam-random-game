@@ -21,6 +21,7 @@ public class ChatDebugTool : MonoBehaviour
         dialogue.SetText(text);
     }
 
+
     public void AddLeftText(string text)
     {
         chatContainer.AddDialogue(ChatType.LeftMessage, text);

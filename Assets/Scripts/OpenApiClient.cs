@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System;
 
 public class OpenApiClient : MonoBehaviour
 {

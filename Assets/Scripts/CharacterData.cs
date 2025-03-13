@@ -7,6 +7,7 @@ public class CharacterData : ScriptableObject
     [Header("Basic Info")]
     public Sprite CharacterSprite;
     public string voiceId;
+    public string characterName;
 
     [Header("Prompts")]
     [TextArea] public string characterPrompt;
@@ -19,19 +20,30 @@ public class CharacterData : ScriptableObject
     public List<string> playerChatHistroy = new List<string>();
     public List<string> characterChatHistory = new List<string>();
 
+    [Header("Last Chat Info")]
+    [SerializeField]
+    private string lastChatTimeRaw;
+
+    public System.DateTime LastChatTime
+    {
+        get => System.DateTime.TryParse(lastChatTimeRaw, out var date) ? date : System.DateTime.MinValue;
+        set => lastChatTimeRaw = value.ToString("o"); // ISO 8601 format
+    }
+
     [Header("Status")]
     public int unreadMessageCount;
     [TextArea] public string latestMessage;
 
     // ----------- Clone 함수 추가 -----------
 
-    public static CharacterData CloneWithNewPromptsAndBasicInfo(Sprite newSprite, string newVoiceId, string newCharacterPrompt, string newOutfitPrompt, string newPersonalityPrompt, string newVoicePrompt)
+    public static CharacterData CloneWithNewPromptsAndBasicInfo(Sprite newSprite, string newName, string newVoiceId, string newCharacterPrompt, string newOutfitPrompt, string newPersonalityPrompt, string newVoicePrompt)
     {
         CharacterData clone = ScriptableObject.CreateInstance<CharacterData>();
 
         // Basic Info 복사
         clone.CharacterSprite = newSprite;
         clone.voiceId = newVoiceId;
+        clone.characterName = newName;
 
         // Prompt 복사
         clone.characterPrompt = newCharacterPrompt;
@@ -45,9 +57,10 @@ public class CharacterData : ScriptableObject
         clone.characterChatHistory = new List<string>();
         clone.unreadMessageCount = 0;
         clone.latestMessage = string.Empty;
+        clone.lastChatTimeRaw = System.DateTime.UtcNow.ToString("o");
 
         //에셋 저장
-        string path = "Assets/Resources/CharacterData/" + newSprite.name + ".asset";
+        string path = "Assets/Resources/CharacterData/" + newName + ".asset";
         UnityEditor.AssetDatabase.CreateAsset(clone, path);
         UnityEditor.AssetDatabase.SaveAssets();
 
