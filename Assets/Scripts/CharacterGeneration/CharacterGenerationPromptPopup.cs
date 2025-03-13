@@ -18,6 +18,7 @@ public class CharacterGenerationPromptPopup : MonoBehaviour
         inputField.onSubmit.RemoveAllListeners();
         submitButton.onClick.RemoveAllListeners();
         inputField.onValueChanged.RemoveAllListeners();
+        inputField.onValidateInput = null;
     }
 
     private void OnSubmitButtonDown()
