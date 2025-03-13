@@ -12,11 +12,12 @@ namespace Dunward.Capricorn
     [RequireComponent(typeof(CapricornData))]
     [RequireComponent(typeof(CapricornSettings))]
     [RequireComponent(typeof(CapricornCache))]
+
     public partial class CapricornRunner : MonoBehaviour
     {
-#region Unity Inspector Fields
+        #region Unity Inspector Fields
         public bool isDebug;
-#endregion
+        #endregion
 
         private CapricornDialogue dialogue;
         private CapricornData data;
@@ -202,29 +203,29 @@ namespace Dunward.Capricorn
             switch (action)
             {
                 case TextTypingUnit typing:
-                {
-                    onBeforeTextTyping?.Invoke(typing.name, typing.subName, typing.script);
-                    bindingInteraction.AddListener(typing.Interaction);
-                    yield return typing.Execute(dialogue.NameTarget, dialogue.SubNameTarget, dialogue.ScriptTarget);
-                    bindingInteraction.RemoveListener(typing.Interaction);
-                    break;
-                }
+                    {
+                        onBeforeTextTyping?.Invoke(typing.name, typing.subName, typing.script);
+                        bindingInteraction.AddListener(typing.Interaction);
+                        yield return typing.Execute(dialogue.NameTarget, dialogue.SubNameTarget, dialogue.ScriptTarget);
+                        bindingInteraction.RemoveListener(typing.Interaction);
+                        break;
+                    }
 
                 case SelectionUnit selection:
-                {
-                    var selections = onSelectionCreate.Invoke(selection.scripts);
-                    yield return selection.Execute(selections, selectionDestroyAfterDelay);
-                    nextNodeIndex = selection.GetNextNodeIndex();
-                    break;
-                }
+                    {
+                        var selections = onSelectionCreate.Invoke(selection.scripts);
+                        yield return selection.Execute(selections, selectionDestroyAfterDelay);
+                        nextNodeIndex = selection.GetNextNodeIndex();
+                        break;
+                    }
 
                 case VariableSelectionUnit selection:
-                {
-                    var selections = onSelectionCreate.Invoke(selection.selections.ConvertAll(s => s.script));
-                    yield return selection.Execute(selections, data, selectionDestroyAfterDelay);
-                    nextNodeIndex = selection.GetNextNodeIndex();
-                    break;
-                }
+                    {
+                        var selections = onSelectionCreate.Invoke(selection.selections.ConvertAll(s => s.script));
+                        yield return selection.Execute(selections, data, selectionDestroyAfterDelay);
+                        nextNodeIndex = selection.GetNextNodeIndex();
+                        break;
+                    }
             }
 
         }

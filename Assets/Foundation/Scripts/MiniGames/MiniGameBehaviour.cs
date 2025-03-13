@@ -9,7 +9,20 @@ public class MiniGameBehaviour : MonoBehaviour
     {
         flag = false;
     }
-
+    public IEnumerator Run2()
+    {
+        while (flag)
+        {
+            yield return null;
+        }
+    }
+    public IEnumerator Run2A()
+    {
+        while (flag)
+        {
+            yield return null;
+        }
+    }
     public IEnumerator Run()
     {
         while (flag)
