@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
@@ -59,3 +60,4 @@ public class GenevaApiClientTestWindow : EditorWindow
         Repaint();
     }
 }
+#endif

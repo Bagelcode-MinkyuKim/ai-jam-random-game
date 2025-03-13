@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: Lila
   m_EditorClassIdentifier: 
   CharacterSprite: {fileID: 0}
-  voiceId: qzY795jwgzhhyH4XAtXc
+  voiceId: jHkpVHu0rG8pFL3XHLPU
   characterName: Lila
   characterPrompt: student
-  outfitPrompt: skirt
-  personalityPrompt: cute
-  VoicePrompt: kind
+  outfitPrompt: suit
+  personalityPrompt: kind
+  VoicePrompt: cute
   chatHistory: []
+  chatHistoryIndex: 
   playerChatHistroy: []
   characterChatHistory: []
-  lastChatTimeRaw: 2025-03-13T08:04:48.0195790Z
+  lastChatTimeRaw: 2025-03-13T09:50:14.2434590Z
   unreadMessageCount: 0
   latestMessage: 

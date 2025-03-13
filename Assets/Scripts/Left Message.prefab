@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 6072376573934137165}
   - component: {fileID: 1941296093688101620}
   m_Layer: 5
-  m_Name: Chat Area (1)
+  m_Name: Left Message
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

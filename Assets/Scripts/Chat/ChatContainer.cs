@@ -14,14 +14,24 @@ public class ChatContainer : MonoBehaviour
     [SerializeField] private List<ChatDialogue> dialougePrefabContiner = new List<ChatDialogue>();
     public UnityAction<ChatType, ChatDialogue> onChatAdded;
 
+    public RectTransform chatParent;
+
 
     public List<ChatDialogue> ChatDialogues { get { return new List<ChatDialogue>(chatDialogues); } }
     public ChatDialogue AddDialogue(ChatType directionType, string message)
     {
-        var chatDialogue = Instantiate(dialougePrefabContiner[(int)directionType], transform);
+        var chatDialogue = Instantiate(dialougePrefabContiner[(int)directionType], chatParent);
         chatDialogue.SetText(message);
         chatDialogues.Add(chatDialogue);
         onChatAdded.Invoke(directionType, chatDialogue);
         return chatDialogue;
+    }
+
+    public void Clear()
+    {
+        foreach (Transform child in chatParent)
+        {
+            Destroy(child.gameObject);
+        }
     }
 }

@@ -1,7 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MainScene : MonoBehaviour
 {
@@ -24,8 +29,24 @@ public class MainScene : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // Load all character data
-        var characterDataList = Resources.LoadAll<CharacterData>("CharacterData");
+        string directoryPath = Path.Combine(Application.persistentDataPath, "characterData");
+
+        if (!Directory.Exists(directoryPath))
+        {
+            Debug.LogWarning($"❌ 캐릭터 데이터 폴더가 존재하지 않습니다: {directoryPath}");
+            return;
+        }
+
+        string[] jsonFiles = Directory.GetFiles(directoryPath, "CharacterData_*.json");
+
+        List<CharacterData> characterDataList = new List<CharacterData>();
+        foreach (string filePath in jsonFiles)
+        {
+            string json = File.ReadAllText(filePath);
+            CharacterData characterData = ScriptableObject.CreateInstance<CharacterData>();
+            JsonUtility.FromJsonOverwrite(json, characterData);
+            characterDataList.Add(characterData);
+        }
 
         // Create character chat elements
         foreach (var characterData in characterDataList)

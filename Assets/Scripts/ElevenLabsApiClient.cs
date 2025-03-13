@@ -6,6 +6,25 @@ using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using MemoryPack;
+[Serializable]
+public class VoiceSettings
+{
+    public float stability;
+    public float similarity_boost;
+    public float style;
+    public bool use_speaker_boost;
+    public float speed;
+    public VoiceSettings() { }
+    public VoiceSettings(float stability, float similarityBoost, float style = 0f, bool useSpeakerBoost = true, float speed = 1f)
+    {
+        this.stability = stability;
+        this.similarity_boost = similarityBoost;
+        this.style = style;
+        this.use_speaker_boost = useSpeakerBoost;
+        this.speed = speed;
+    }
+}
+
 [MemoryPackable]
 public partial class ElevenLabsApiClient : MonoBehaviour
 {
@@ -18,24 +37,6 @@ public partial class ElevenLabsApiClient : MonoBehaviour
     private string apiBaseUrl = "https://api.elevenlabs.io/v1";
     public string DefaultVoiceId { get; set; }
 
-    [Serializable]
-    public class VoiceSettings
-    {
-        public float stability;
-        public float similarity_boost;
-        public float style;
-        public bool use_speaker_boost;
-        public float speed;
-        public VoiceSettings() { }
-        public VoiceSettings(float stability, float similarityBoost, float style = 0f, bool useSpeakerBoost = true, float speed = 1f)
-        {
-            this.stability = stability;
-            this.similarity_boost = similarityBoost;
-            this.style = style;
-            this.use_speaker_boost = useSpeakerBoost;
-            this.speed = speed;
-        }
-    }
 
     public async UniTask<byte[]> CreateSpeechAsync(string text, string voiceId = null)
     {
@@ -51,7 +52,13 @@ public partial class ElevenLabsApiClient : MonoBehaviour
             throw new ArgumentException("Voice ID must be provided either as a parameter or set as DefaultVoiceId.");
         }
         string url = $"{apiBaseUrl}/text-to-speech/{chosenVoiceId}?output_format=pcm_22050";
-        var requestPayload = new TTSRequest { text = text, model_id = "eleven_multilingual_v2" };
+        var requestPayload = new TTSRequest
+        {
+            text = text,
+            model_id = "eleven_multilingual_v2",
+            voice_settings = new VoiceSettings(0.60f, 0.80f, 0.40f, false, 0.76f)
+        };
+
         string jsonData = JsonUtility.ToJson(requestPayload);
         using (UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))
         {
@@ -168,6 +175,7 @@ public class TTSRequest
 {
     public string text;
     public string model_id;
+    public VoiceSettings voice_settings;
 }
 
 [Serializable]

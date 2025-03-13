@@ -17,6 +17,7 @@ public class CharacterData : ScriptableObject
 
     [Header("Chat Histories")]
     public List<string> chatHistory = new List<string>();
+    public List<int> chatHistoryIndex = new List<int>();
     public List<string> playerChatHistroy = new List<string>();
     public List<string> characterChatHistory = new List<string>();
 
@@ -55,14 +56,28 @@ public class CharacterData : ScriptableObject
         clone.chatHistory = new List<string>();
         clone.playerChatHistroy = new List<string>();
         clone.characterChatHistory = new List<string>();
+        clone.chatHistoryIndex = new List<int>();
         clone.unreadMessageCount = 0;
         clone.latestMessage = string.Empty;
         clone.lastChatTimeRaw = System.DateTime.UtcNow.ToString("o");
 
         //에셋 저장
         string path = "Assets/Resources/CharacterData/" + newName + ".asset";
-        UnityEditor.AssetDatabase.CreateAsset(clone, path);
-        UnityEditor.AssetDatabase.SaveAssets();
+
+        // JSON 저장 경로
+        string jsonDirectoryPath = Application.persistentDataPath + "/characterData";
+
+        // 디렉토리 없으면 생성
+        if (!System.IO.Directory.Exists(jsonDirectoryPath))
+        {
+            System.IO.Directory.CreateDirectory(jsonDirectoryPath);
+        }
+
+        // JSON 데이터 저장
+        string json = JsonUtility.ToJson(clone, true); // pretty print
+        string jsonFilePath = System.IO.Path.Combine(jsonDirectoryPath, $"CharacterData_{newVoiceId}" + ".json");
+        System.IO.File.WriteAllText(jsonFilePath, json);
+        Debug.Log($"✅ 캐릭터 데이터가 JSON으로 저장되었습니다: {jsonFilePath}");
 
         return clone;
     }

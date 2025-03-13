@@ -40,7 +40,7 @@ public class CharacterChatElement : MonoBehaviour
         // 프로필 이미지
         if (profileImage != null)
         {
-            byte[] pngData = File.ReadAllBytes(Application.persistentDataPath + $"/Resources/{characterData.name}.png");
+            byte[] pngData = File.ReadAllBytes(Application.persistentDataPath + $"/Resources/{characterData.characterName}.png");
             Texture2D tex = new Texture2D(2, 2);
             tex.LoadImage(pngData);
             Sprite sp = Sprite.Create(
