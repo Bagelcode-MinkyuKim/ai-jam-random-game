@@ -4,7 +4,13 @@ using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.IO;
-
+public class BypassCertificate : CertificateHandler
+{
+    protected override bool ValidateCertificate(byte[] certificateData)
+    {
+        return true; // 모든 인증서 통과 (비추천)
+    }
+}
 public class GenevaApiClient : MonoBehaviour
 {
     public static GenevaApiClient Instance;
@@ -14,7 +20,7 @@ public class GenevaApiClient : MonoBehaviour
         Instance = this;
     }
 
-    private string apiURL = "http://api.genevagamestudio.com:3080/images/txt2img";
+    private string apiURL = "https://api2.genevagamestudio.com/images/txt2img";
 
     private static readonly HttpClient client = new HttpClient();
 
@@ -39,6 +45,7 @@ public class GenevaApiClient : MonoBehaviour
         UnityWebRequest request = new UnityWebRequest(apiURL, "POST");
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.SetRequestHeader("Content-Type", "application/json");
+        request.certificateHandler = new BypassCertificate();
         request.SetRequestHeader("User-Agent", "curl/7.68.0");
         request.downloadHandler = new DownloadHandlerBuffer();
         await request.SendWebRequest().ToUniTask();

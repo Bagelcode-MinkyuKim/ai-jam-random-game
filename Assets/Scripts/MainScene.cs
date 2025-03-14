@@ -17,7 +17,9 @@ public class MainScene : MonoBehaviour
     private void OnEnable()
     {
         LoadCharacterData();
-        SoundManager.Instance.PlayLobbyBGM();
+
+        if (SoundManager.Instance)
+            SoundManager.Instance.PlayLobbyBGM();
     }
 
     public void LoadCharacterData()

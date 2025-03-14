@@ -16,22 +16,35 @@ public class ChatContainer : MonoBehaviour
 
     public RectTransform chatParent;
 
-
+    private void Awake()
+    {
+        onChatAdded = new UnityAction<ChatType, ChatDialogue>((chatType, chatDialogue) => { });
+    }
     public List<ChatDialogue> ChatDialogues { get { return new List<ChatDialogue>(chatDialogues); } }
     public ChatDialogue AddDialogue(ChatType directionType, string message)
     {
         var chatDialogue = Instantiate(dialougePrefabContiner[(int)directionType], chatParent);
         chatDialogue.SetText(message);
         chatDialogues.Add(chatDialogue);
+        chatParent.sizeDelta += new Vector2(0, (chatDialogue.transform as RectTransform).sizeDelta.y + 50);
         onChatAdded.Invoke(directionType, chatDialogue);
+
         return chatDialogue;
     }
 
+    private void OnEnable()
+    {
+    }
+
+
+
     public void Clear()
     {
+        chatParent.sizeDelta = new Vector2(chatParent.sizeDelta.x, 50);
         foreach (Transform child in chatParent)
         {
             Destroy(child.gameObject);
         }
+        chatDialogues.Clear();
     }
 }
